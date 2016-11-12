@@ -25,7 +25,6 @@ class Energy1stFloor(object):
         datarows = self.readDataFile(filename)
         dataStarts = False
         data = []
-        print "parseDataFile1"
         for r in datarows:
             if r[0].startswith('Date'):
                 dataStarts = True
@@ -44,17 +43,11 @@ class Energy1stFloor(object):
                 total1C = float(r[10])
  
                 data.append([date, lighting1A, lighting1B, lighting1C, sockets1A, sockets1B, sockets1C, total1A, total1B, total1C])
-#                dd = datetime.date(date)
                 timeDates.append(date)
                 timeData.append([lighting1A, lighting1B, lighting1C, sockets1A, sockets1B, sockets1C, total1A, total1B, total1C])
-        print "parseDataFile2"
-        print len(timeDates)
-        print len(timeData)
         return data
 
-
     def getTimeData(self, time):
-        print str(time)
         tdata = self.nearestTimeDataValue(time)
         return tdata
 

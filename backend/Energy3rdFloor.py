@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, csv, re
+import os, csv, re, json, bisect
 from datetime import datetime, time
 
 epoch = datetime.utcfromtimestamp(0)
 
-class Energy1stFloor(object):
+timeData = []
+timeDates = []
+
+class Energy3rdFloor(object):
     def __init__(self): pass
 
     def readDataFile(self, filename):
@@ -20,33 +23,46 @@ class Energy1stFloor(object):
 
     def parseDataFile(self, filename):
         datarows = self.readDataFile(filename)
-        data = []
         dataStarts = False
-
+        data = []
         for r in datarows:
             if r[0].startswith('Date'):
                 dataStarts = True
                 continue
             if dataStarts == True:
                 d = r[0] + "-" + r[1]
-                date = self.convertToUnixTime(d)
-                lighting1A = float(r[2])
-                lighting1B = float(r[3])
-                lighting1C = float(r[4])
-                sockets1A = float(r[5])
-                sockets1B = float(r[6])
-                sockets1C = float(r[7])
-                total1A = float(r[8])
-                total1B = float(r[9])
-                total1C = float(r[10])                
-                data.append([date, lighting1A, lighting1B, lighting1C, sockets1A, sockets1B, sockets1C, total1A, total1B, total1C])
+                date = self.convertToDate(d)
+                lighting3A = float(r[2])
+                lighting3B = float(r[3])
+                lighting3C = float(r[4])
+                sockets3A = float(r[5])
+                sockets3B = float(r[6])
+                sockets3C = float(r[7])
+                total3A = float(r[8])
+                total3B = float(r[9])
+                total3C = float(r[10])
+
+                data.append([date, lighting3A, lighting3B, lighting3C, sockets3A, sockets3B, sockets3C, total3A, total3B, total3C])
+                timeDates.append(date)
+                timeData.append([lighting3A, lighting3B, lighting3C, sockets3A, sockets3B, sockets3C, total3A, total3B, total3C])
         return data
 
+    def getTimeData(self, time):
+        tdata = self.nearestTimeDataValue(time)
+        return tdata
+
+    def nearestTimeDataValue(self, queryDate):
+        position = bisect.bisect_left(timeDates, queryDate)
+        return timeData[position]
 
     def incrementDate(self, d):
         dc = d.split('.')
         dc[0] = str(int(dc[0]) + 1)
         return ".".join(dc)
+
+    def convertToDate(self, t):
+        d = datetime.strptime(t, '%Y-%m-%d-%H:%M:%S')
+        return d
 
     def convertToUnixTime(self, t):
         d = datetime.strptime(t, '%Y-%m-%d-%H:%M:%S')
