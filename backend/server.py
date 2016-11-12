@@ -36,7 +36,8 @@ def getEnergy1stData():
     d = timeStringToDate(timeString)
     energyTimeData = e1f.parseDataFile('../data/energy1stFloor.csv')
     timeData = e1f.getTimeData(d)
-    return jsonify({'lighting1A': timeData[0],
+    return jsonify({'querytime': timeString,
+                    'data': {'lighting1A': timeData[0],
                     'lighting1B': timeData[1],
                     'lighting1C': timeData[2],
                     'sockets1A': timeData[3],
@@ -44,7 +45,7 @@ def getEnergy1stData():
                     'sockets1C': timeData[5],
                     'total1A': timeData[6],
                     'total1B': timeData[7],
-                    'total1C': timeData[8]})
+                    'total1C': timeData[8]}})
 
 @app.route('/energy/floor/2/query')
 def getEnergy2ndData():
@@ -52,7 +53,8 @@ def getEnergy2ndData():
     d = timeStringToDate(timeString)
     energyTimeData = e1f.parseDataFile('../data/energy2ndFloor.csv')
     timeData = e1f.getTimeData(d)
-    return jsonify({'lighting2A': timeData[0],
+    return jsonify({'querytime': timeString,
+                    'data' : {'lighting2A': timeData[0],
                     'lighting2B': timeData[1],
                     'lighting2C': timeData[2],
                     'sockets2A': timeData[3],
@@ -60,7 +62,7 @@ def getEnergy2ndData():
                     'sockets2C': timeData[5],
                     'total2A': timeData[6],
                     'total2B': timeData[7],
-                    'total2C': timeData[8]})
+                    'total2C': timeData[8]}})
 
 @app.route('/energy/floor/3/query')
 def getEnergy3rdData():
@@ -68,7 +70,8 @@ def getEnergy3rdData():
     d = timeStringToDate(timeString)
     energyTimeData = e1f.parseDataFile('../data/energy3rdFloor.csv')
     timeData = e1f.getTimeData(d)
-    return jsonify({'lighting3A': timeData[0],
+    return jsonify( {'querytime': timeString,
+                    'data' : {'lighting3A': timeData[0],
                     'lighting3B': timeData[1],
                     'lighting3C': timeData[2],
                     'sockets3A': timeData[3],
@@ -76,14 +79,14 @@ def getEnergy3rdData():
                     'sockets3C': timeData[5],
                     'total3A': timeData[6],
                     'total3B': timeData[7],
-                    'total3C': timeData[8]})
+                    'total3C': timeData[8]}})
 
 
 
 def timeStringToDate(timestring):
     #  print (args) # For debugging
     try:
-        ddate = datetime.strptime(timestring, '%Y-%m-%d')
+        ddate = datetime.strptime(timestring, '%Y-%m-%dT%H:%M')
         return ddate
 
     except Exception as e:
